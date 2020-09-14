@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-
 using Microsoft.Management.Infrastructure;
 
-namespace ConsoleApp1
+namespace ConsoleAppDotNetFramework
 {
     class Program
     {
@@ -17,9 +15,9 @@ namespace ConsoleApp1
 
         private static void PrintMonitorInfos()
         {
-            CimSession mySession = CimSession.Create(null);
+            var mySession = CimSession.Create(null);
 
-            IEnumerable<CimInstance> queryInstances =
+            var queryInstances =
                 mySession.QueryInstances(@"root\wmi",
                     "WQL",
                     @"select * from WmiMonitorID");
@@ -44,10 +42,10 @@ namespace ConsoleApp1
             {
                 return String.Empty;
             }
-            var ushortValues = (ushort[])value;
-
+            var ushortValues = (ushort[]) value;
+            
             var listOfChars = ushortValues.Select(x => Char.ConvertFromUtf32(Convert.ToInt32(x)));
-
+            
             return string.Join("", listOfChars);
         }
     }

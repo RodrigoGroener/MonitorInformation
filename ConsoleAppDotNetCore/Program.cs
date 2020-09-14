@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Management.Infrastructure;
-using CimType = Microsoft.Management.Infrastructure.CimType;
 
-namespace ConsoleApp2
+using Microsoft.Management.Infrastructure;
+
+namespace ConsoleAppDotNetCore
 {
     class Program
     {
@@ -17,22 +16,22 @@ namespace ConsoleApp2
 
         private static void PrintMonitorInfos()
         {
-            CimSession mySession = CimSession.Create(null);
+            var mySession = CimSession.Create(null);
 
-            IEnumerable<CimInstance> queryInstances =
+            var queryInstances =
                 mySession.QueryInstances(@"root\wmi",
                     "WQL",
                     @"select * from WmiMonitorID");
 
             foreach (var queryInstance in queryInstances)
             {
-                foreach (var cimInstanceProperty in queryInstance.CimInstanceProperties)
+                foreach (var property in queryInstance.CimInstanceProperties)
                 {
-                    var value = cimInstanceProperty.CimType == CimType.UInt16Array
-                        ? ConvertUInt16ArrayToString(cimInstanceProperty)
-                        : Convert.ToString(cimInstanceProperty.Value);
+                    var value = property.CimType == CimType.UInt16Array
+                        ? ConvertUInt16ArrayToString(property)
+                        : Convert.ToString(property.Value);
 
-                    Console.WriteLine(cimInstanceProperty.Name + " " + value);
+                    Console.WriteLine(property.Name + " " + value);
                 }
             }
         }
@@ -44,10 +43,10 @@ namespace ConsoleApp2
             {
                 return String.Empty;
             }
-            var ushortValues = (ushort[]) value;
-            
+            var ushortValues = (ushort[])value;
+
             var listOfChars = ushortValues.Select(x => Char.ConvertFromUtf32(Convert.ToInt32(x)));
-            
+
             return string.Join("", listOfChars);
         }
     }
